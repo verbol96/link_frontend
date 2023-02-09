@@ -1,10 +1,11 @@
-
+import {BrowserRouter} from 'react-router-dom'
+import AppRouter from './pages/AppRouter';
 
 function App() {
   return (
-    <div>
-        <h1>Hi</h1>
-    </div>
+    <BrowserRouter>
+      <AppRouter />
+    </BrowserRouter>
   );
 }
 
