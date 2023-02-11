@@ -3,6 +3,7 @@ import {useState} from 'react'
 import './table.css'
 import axios from 'axios'
 import {useSelector, useDispatch} from 'react-redux'
+import _ from 'lodash'
 
 export const FormAdd = ({isFormAdd, setIsFormAdd, user}) =>{
 
@@ -48,9 +49,19 @@ export const FormAdd = ({isFormAdd, setIsFormAdd, user}) =>{
             "photo": []*/
 
         editRow.id>0 ?
-        axios.put(`http://94.228.126.26:8001/api/order/updateOrder/${editRow.id}`, data)
+        axios.put(`http://94.228.126.26:8001/api/order/updateOrder/${editRow.id}`, data).then(()=>{
+            axios.get('http://94.228.126.26:8001/api/order/getAll').then(
+            res=> {
+                dispach({type: "saveOrder", payload: _.orderBy(res.data.order,'status', 'asc' )})
+            }
+        )})
         : 
-        axios.post('http://94.228.126.26:8001/api/order/addOrder', data)
+        axios.post('http://94.228.126.26:8001/api/order/addOrder', data).then(()=>{
+            axios.get('http://94.228.126.26:8001/api/order/getAll').then(
+            res=> {
+                dispach({type: "saveOrder", payload: _.orderBy(res.data.order,'status', 'asc' )})
+            }
+        )})
 
         setTimeout(() => {setIsFormAdd(false)}, 100);
         
