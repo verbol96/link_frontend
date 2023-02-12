@@ -1,9 +1,11 @@
-import {Modal, Button, Row, Col, ModalFooter, FormLabel, FormControl , Alert, FormSelect} from 'react-bootstrap'
+import {Modal, Button, Row, Col, ModalFooter, FormLabel, FormControl , Alert, FormSelect, Card, Form} from 'react-bootstrap'
 import {useState} from 'react'
 import './table.css'
 import axios from 'axios'
 import {useSelector, useDispatch} from 'react-redux'
 import _ from 'lodash'
+import {nanoid} from 'nanoid'
+import { FormatPhoto } from './FormatPhoto'
 
 export const FormAdd = ({isFormAdd, setIsFormAdd, user}) =>{
 
@@ -21,9 +23,12 @@ export const FormAdd = ({isFormAdd, setIsFormAdd, user}) =>{
     const [adress, setAdress] = useState(editRow.id>0 ? userOne[0].adress : '')
 
     const [oblast, setOblast] = useState(editRow.id>0 ? userOne[0].oblast : '')
-    const [rayon, setRayon] = useState(editRow.id>0 ? userOne[0].rayon : '')
+    const [raion, setRaion] = useState(editRow.id>0 ? userOne[0].raion : '')
     const [postCode, setPostCode] = useState(editRow.id>0 ? userOne[0].postCode : '')
     
+    const [other, setOther] =useState(editRow.id>0 ? editRow.other : '')
+    const [codeInside] =useState(editRow.id>0 ? editRow.codeInside : nanoid(6))
+    const [codeOutside, setCodeOutside] =useState(editRow.id>0 ? editRow.codeOutside : '')
 
     const SendToDB = () =>{
         const data = {
@@ -34,25 +39,22 @@ export const FormAdd = ({isFormAdd, setIsFormAdd, user}) =>{
             "city": city,
             "adress": adress,
             "oblast": oblast,
-            "rayon": rayon,
+            "raion": raion,
             "postCode": postCode,
             "photo": [], 
-            "userId": userId
+            "userId": userId,
+            "other":other,
+            "codeInside": codeInside,
+            "codeOutside": codeOutside
+
         }
         
-           /* "password": "1234",
-            
-            "firstClass": false,
-           
-            "codeInside": "code"
-            "price": "10",
-            "photo": []*/
-
         editRow.id>0 ?
         axios.put(`http://94.228.126.26:8001/api/order/updateOrder/${editRow.id}`, data).then(()=>{
             axios.get('http://94.228.126.26:8001/api/order/getAll').then(
             res=> {
                 dispach({type: "saveOrder", payload: _.orderBy(res.data.order,'status', 'asc' )})
+                dispach({type: "saveUser", payload: res.data.user})
             }
         )})
         : 
@@ -60,30 +62,48 @@ export const FormAdd = ({isFormAdd, setIsFormAdd, user}) =>{
             axios.get('http://94.228.126.26:8001/api/order/getAll').then(
             res=> {
                 dispach({type: "saveOrder", payload: _.orderBy(res.data.order,'status', 'asc' )})
+                dispach({type: "saveUser", payload: res.data.user})
             }
         )})
-
-        setTimeout(() => {setIsFormAdd(false)}, 100);
-        
+        ModalClose()
     }
 
     const ModalClose = () =>{
-        setTimeout(() => {setIsFormAdd(false)}, 100);
+        setIsFormAdd(false)
         dispach({type:"editRow", payload: 0})
     }
 
     const DeleteBtn = () =>{
-        axios.delete(`http://94.228.126.26:8001/api/order/deleteOrder/${editRow.id}`)
-        setTimeout(() => {setIsFormAdd(false)}, 100);
+        axios.delete(`http://94.228.126.26:8001/api/order/deleteOrder/${editRow.id}`).then(()=>{
+            axios.get('http://94.228.126.26:8001/api/order/getAll').then(
+            res=> {
+                dispach({type: "saveOrder", payload: _.orderBy(res.data.order,'status', 'asc' )})
+            }
+        )})
+        setIsFormAdd(false)
         dispach({type:"editRow", payload: 0})
+    }
+
+    const [photo, setPhoto] = useState([])
+
+
+
+    const thema =()=>{
+        if(editRow.id>0) return 'success'
+        else return 'primary'
     }
 
     return(
         <Modal size='lg' show={isFormAdd} onHide={()=>ModalClose()} dialogClassName="modal-80w">
         <Modal.Body>
-            <Alert size="sm" variant='secondary'>Добавление заказа</Alert>
-            <Row>
-                <Col>
+            {editRow.id>0?
+            <Alert size="sm" variant ={thema()}>Редактирование заказа</Alert>:
+            <Alert size="sm" variant ={thema()}>Добавление заказа</Alert>
+            }
+            
+            <Card className='mt-3'>
+            <Row className='p-3'>
+                <Col md={5}>
                     <Row className="mb-1">
                         <Col md={3}> <FormLabel>Имя:</FormLabel></Col>
                         <Col md={9}><FormControl size='sm' value={nikname} onChange={(e)=>setNikname(e.target.value)} /> </Col>
@@ -96,11 +116,17 @@ export const FormAdd = ({isFormAdd, setIsFormAdd, user}) =>{
                         <Col md={3}> <FormLabel>Телефон:</FormLabel></Col>
                         <Col md={9}><FormControl size='sm' value={phone} onChange={(e)=>setPhone(e.target.value)} /> </Col>
                     </Row>
+                    <Row>
+                        <Col md={{span: 9, offset:3}}> 
+                        <Button className='mt-2' style={{width:"100%"}} variant='light' size='sm'>copy</Button>
+                        </Col>
+                    </Row>
+                    
                 </Col>
 
                 
                 
-                <Col>
+                <Col md={{span:6, offset:1}}>
                     <Row>
                         <Col md={6} className="mb-1">
                             <FormSelect  size='sm' defaultValue={typePost} onChange={(e)=>setTypePost(e.target.value)}>
@@ -136,7 +162,7 @@ export const FormAdd = ({isFormAdd, setIsFormAdd, user}) =>{
                     </Row>
                     <Row>
                         <Col md={3}> <FormLabel>Район:</FormLabel></Col>
-                        <Col md={9}><FormControl size='sm' value={rayon} onChange={(e)=>setRayon(e.target.value)} /> </Col>
+                        <Col md={9}><FormControl size='sm' value={raion} onChange={(e)=>setRaion(e.target.value)} /> </Col>
                     </Row>
                     <Row>
                         <Col md={3}> <FormLabel>Область:</FormLabel></Col>
@@ -145,19 +171,38 @@ export const FormAdd = ({isFormAdd, setIsFormAdd, user}) =>{
                     </>
                     }
                 </Col>
-                
             </Row>
+            </Card>
 
-
+            <FormatPhoto photo={photo} setPhoto={setPhoto} thema={thema} />
+            
+            <Card className='mt-3'>
+                <Row className='p-3'>
+                    <Col md={6}>
+                        <Form.Label size='sm'>Примечания:</Form.Label>
+                        <FormControl value={other} onChange={(e)=>setOther(e.target.value)} size='sm' as="textarea" rows={3} />
+                    </Col>
+                    <Col md={3}>
+                        <Form.Label size='sm'>Внутренний код:</Form.Label>
+                        <FormControl defaultValue={codeInside} size='sm' disabled />
+                        <Button className='mt-2' style={{width:"100%"}} variant='light' size='sm'>copy</Button>
+                    </Col>
+                    <Col md={3}>
+                        <Form.Label size='sm'>Почтовый код:</Form.Label>
+                        <FormControl size='sm'   value={codeOutside} onChange={(e)=>setCodeOutside(e.target.value)} />
+                        <Button className='mt-2' style={{width:"100%"}} size='sm' variant='light'>copy</Button>
+                    </Col>
+                </Row>
+            </Card>
 
             
         </Modal.Body>
         <ModalFooter>
             <Row>
                 <Col>
-                    <Button variant="secondary" onClick={()=>SendToDB()}>Сохранить</Button>{" "}
+                    <Button variant ={thema()} onClick={()=>SendToDB()}>Сохранить</Button>{" "}
                     <Button variant="light" onClick={()=>ModalClose()}>Отмена</Button>{" "}
-                    <Button variant="danger" onClick={()=>DeleteBtn()}>Удалить</Button>
+                    <Button variant="light" onClick={()=>DeleteBtn()}>Удалить</Button>
                 </Col>
             </Row>
         </ModalFooter>
