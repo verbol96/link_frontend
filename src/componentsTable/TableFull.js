@@ -15,17 +15,25 @@ export const TableFull = () =>{
     const [inputSearch, setInputSearch] = useState('')
     const [filterCheck, setFilterCheck] = useState([1,2,3,4,5])
 
+    const loading =(res)=>{
+        dispach({type: "saveOrder", payload: _.orderBy(_.orderBy(res.data.order, 'status', 'asc' ), 'id', 'desc' )})
+        dispach({type: "saveUser", payload: res.data.user})
+        dispach({type: "savePhoto", payload: res.data.photo})
+    }
+
     useEffect(()=>{
         axios.get('http://94.228.126.26:8001/api/order/getAll').then(
             res=> {
-                dispach({type: "saveOrder", payload: _.orderBy(res.data.order,'status', 'asc' )})
-                dispach({type: "saveUser", payload: _.orderBy(res.data.user,'id', 'asc' )})
+                dispach({type: "saveOrder", payload: _.orderBy(_.orderBy(res.data.order, 'status', 'asc' ), 'id', 'desc' )})
+                dispach({type: "saveUser", payload: res.data.user})
+                dispach({type: "savePhoto", payload: res.data.photo})
             }
         )
     },[isFormAdd, dispach])
 
     const orderFull = useSelector(state=>state.order.order)
     const user = useSelector(state=>state.order.user)
+    const photo = useSelector(state=>state.order.photo)
 
     const OrderList = () =>{
 
@@ -60,10 +68,14 @@ export const TableFull = () =>{
     }
     
     const SumPrice = () =>{
-        return OrderList().reduce((sum,el)=>{
-            return sum+el.price
+        const pr =  OrderList().reduce((sum,el)=>{
+            console.log(el.price)
+            return sum+Number(el.price)
         },0)
+       
+        return pr
     }
+
 
     return(
         <div>
@@ -103,12 +115,12 @@ export const TableFull = () =>{
                 </tfoot>
                 <tbody>
                     {OrderList().map((el,index)=><TableRow key={index} el={el} user={user.filter(step=>step.id === el.userId)[0]} 
-                        setIsFormAdd={setIsFormAdd} />)}
+                        setIsFormAdd={setIsFormAdd} photo={photo.filter(step=>step.orderId === el.id)} />)}
                 </tbody>
              </Table>
             </Col>
         </Row>
-        {isFormAdd?<FormAdd isFormAdd={isFormAdd} setIsFormAdd={setIsFormAdd} user={user} />:null}
+        {isFormAdd?<FormAdd isFormAdd={isFormAdd} setIsFormAdd={setIsFormAdd} user={user} loading={loading} />:null}
 
         </div>
     )

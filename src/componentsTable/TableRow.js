@@ -4,7 +4,7 @@ import axios from 'axios'
 //import {useState} from 'react'
 import _ from 'lodash'
 
-export const TableRow = ({el, user, setIsFormAdd}) =>{
+export const TableRow = ({el, user, setIsFormAdd, photo}) =>{
 
     const dispach = useDispatch()          
 
@@ -34,6 +34,17 @@ export const TableRow = ({el, user, setIsFormAdd}) =>{
         )})
     }
 
+    const PhotoShow=()=>{
+
+        return photo.reduce((sum, el)=>{
+            if(el.paper==='lustre'){
+                return sum+el.amount+"шт("+el.format+")ЛЮСТРА "
+            }else{
+                return sum+el.amount+"шт("+el.format+") "
+            }
+        }, '')
+    }
+    
     return(
         <tr>
             <td style={{width: 25}}><FormCheck /></td>
@@ -42,9 +53,9 @@ export const TableRow = ({el, user, setIsFormAdd}) =>{
             <td onClick={()=>EditRow()}>{user.nikname}</td>
             <td onClick={()=>EditRow()}>{user.phone}</td>
             <td onClick={()=>EditRow()}>{user.city}</td>
-            <td onClick={()=>EditRow()}>photo</td>
+            <td onClick={()=>EditRow()} style={{fontSize:13}}>{PhotoShow()}</td>
             <td onClick={()=>EditRow()}>warn</td>
-            <td style={{width: 75, textAlign:'right'}} onClick={()=>EditRow()}>{el.price}</td>
+            <td style={{width: 100, textAlign:'right'}} onClick={()=>EditRow()}>{el.price}</td>
             <td>
                 <FormSelect style={{backgroundColor: ColorBG[el.status]}} size='sm' value={el.status} onChange={(e)=>ChangeStatus(e)}>
                     <option value="1">в обработке</option>

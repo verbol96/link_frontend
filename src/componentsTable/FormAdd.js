@@ -1,16 +1,16 @@
-import {Modal, Button, Row, Col, ModalFooter, FormLabel, FormControl , Alert, FormSelect, Card, Form} from 'react-bootstrap'
+import {Modal, Button, Row, Col, ModalFooter, FormLabel, FormControl , Alert, FormSelect, Card, Form, FormCheck} from 'react-bootstrap'
 import {useState} from 'react'
 import './table.css'
 import axios from 'axios'
 import {useSelector, useDispatch} from 'react-redux'
-import _ from 'lodash'
 import {nanoid} from 'nanoid'
-import { FormatPhoto } from './FormatPhoto'
+import { FormatAll } from './FormatAll'
 
-export const FormAdd = ({isFormAdd, setIsFormAdd, user}) =>{
+export const FormAdd = ({isFormAdd, setIsFormAdd, user, loading}) =>{
 
     const dispach = useDispatch()
     const editRow = useSelector(state=>state.order.editRow)
+    const photoAll = useSelector(state=>state.order.photo)
     const userOne = user.filter(el=>el.id === editRow.userId)
 
     const [userId] = useState( editRow.id>0 ? userOne[0].id : '')
@@ -25,45 +25,44 @@ export const FormAdd = ({isFormAdd, setIsFormAdd, user}) =>{
     const [oblast, setOblast] = useState(editRow.id>0 ? userOne[0].oblast : '')
     const [raion, setRaion] = useState(editRow.id>0 ? userOne[0].raion : '')
     const [postCode, setPostCode] = useState(editRow.id>0 ? userOne[0].postCode : '')
+    const [firstClass, setFirstClass] = useState(editRow.id>0 ? userOne[0].firstClass : false)
     
     const [other, setOther] =useState(editRow.id>0 ? editRow.other : '')
     const [codeInside] =useState(editRow.id>0 ? editRow.codeInside : nanoid(6))
     const [codeOutside, setCodeOutside] =useState(editRow.id>0 ? editRow.codeOutside : '')
+    const [price, setPrice] =useState(editRow.id>0 ? editRow.price : 0)
 
+    const [photo, setPhoto] = useState(editRow.id>0 ? photoAll.filter(el=>el.orderId===editRow.id) :[])
+  
     const SendToDB = () =>{
         const data = {
             "name": name,
             "nikname": nikname,
-            "phone":phone,
+            "phone": phone,
             "typePost": typePost,
             "city": city,
             "adress": adress,
             "oblast": oblast,
             "raion": raion,
             "postCode": postCode,
-            "photo": [], 
+            "photo": photo, 
             "userId": userId,
             "other":other,
             "codeInside": codeInside,
-            "codeOutside": codeOutside
-
+            "codeOutside": codeOutside,
+            "price": price,
+            "firstClass": firstClass
         }
-        
+
         editRow.id>0 ?
         axios.put(`http://94.228.126.26:8001/api/order/updateOrder/${editRow.id}`, data).then(()=>{
             axios.get('http://94.228.126.26:8001/api/order/getAll').then(
-            res=> {
-                dispach({type: "saveOrder", payload: _.orderBy(res.data.order,'status', 'asc' )})
-                dispach({type: "saveUser", payload: res.data.user})
-            }
+            res=> { loading(res)}
         )})
         : 
         axios.post('http://94.228.126.26:8001/api/order/addOrder', data).then(()=>{
             axios.get('http://94.228.126.26:8001/api/order/getAll').then(
-            res=> {
-                dispach({type: "saveOrder", payload: _.orderBy(res.data.order,'status', 'asc' )})
-                dispach({type: "saveUser", payload: res.data.user})
-            }
+                res=> { loading(res)}
         )})
         ModalClose()
     }
@@ -76,17 +75,11 @@ export const FormAdd = ({isFormAdd, setIsFormAdd, user}) =>{
     const DeleteBtn = () =>{
         axios.delete(`http://94.228.126.26:8001/api/order/deleteOrder/${editRow.id}`).then(()=>{
             axios.get('http://94.228.126.26:8001/api/order/getAll').then(
-            res=> {
-                dispach({type: "saveOrder", payload: _.orderBy(res.data.order,'status', 'asc' )})
-            }
+                res=> { loading(res)}
         )})
         setIsFormAdd(false)
         dispach({type:"editRow", payload: 0})
     }
-
-    const [photo, setPhoto] = useState([])
-
-
 
     const thema =()=>{
         if(editRow.id>0) return 'success'
@@ -118,22 +111,27 @@ export const FormAdd = ({isFormAdd, setIsFormAdd, user}) =>{
                     </Row>
                     <Row>
                         <Col md={{span: 9, offset:3}}> 
-                        <Button className='mt-2' style={{width:"100%"}} variant='light' size='sm'>copy</Button>
+                        <Button onClick={()=>navigator.clipboard.writeText(name+' '+phone)} className='mt-2' style={{width:"100%"}} variant='light' size='sm'>copy</Button>
                         </Col>
                     </Row>
                     
                 </Col>
 
-                
-                
                 <Col md={{span:6, offset:1}}>
                     <Row>
-                        <Col md={6} className="mb-1">
+                        <Col md={5} className="mb-1">
                             <FormSelect  size='sm' defaultValue={typePost} onChange={(e)=>setTypePost(e.target.value)}>
                                 <option value={'E'}>Европочта</option>
                                 <option value={'R'}>Белпочта</option>
                             </FormSelect>
                         </Col>
+                        {typePost==="R"?<>
+                        <Col md={{span:1, offset:2}} className="mb-1">
+                            <FormCheck checked={firstClass} onChange={(e)=>setFirstClass(e.target.checked)} />
+                        </Col>
+                        <Col md={{span:4, offset:0}} className="mb-1">
+                            <FormLabel style={{fontSize:15}}>первый класс</FormLabel>
+                        </Col></>:null}
                     </Row>
                     {typePost==="E"?
                     <>
@@ -152,7 +150,7 @@ export const FormAdd = ({isFormAdd, setIsFormAdd, user}) =>{
                         <Col md={3}> <FormLabel>Город:</FormLabel></Col>
                         <Col md={9}><FormControl size='sm' value={city} onChange={(e)=>setCity(e.target.value)} /> </Col>
                     </Row>
-                    <Row>
+                    <Row className="mb-1">
                         <Col md={3}> <FormLabel>Адрес:</FormLabel></Col>
                         <Col md={9}><FormControl size='sm' value={adress} onChange={(e)=>setAdress(e.target.value)} /> </Col>
                     </Row>
@@ -160,7 +158,7 @@ export const FormAdd = ({isFormAdd, setIsFormAdd, user}) =>{
                         <Col md={3}> <FormLabel>Индекс:</FormLabel></Col>
                         <Col md={9}><FormControl size='sm' value={postCode} onChange={(e)=>setPostCode(e.target.value)} /> </Col>
                     </Row>
-                    <Row>
+                    <Row className="mb-1">
                         <Col md={3}> <FormLabel>Район:</FormLabel></Col>
                         <Col md={9}><FormControl size='sm' value={raion} onChange={(e)=>setRaion(e.target.value)} /> </Col>
                     </Row>
@@ -174,7 +172,7 @@ export const FormAdd = ({isFormAdd, setIsFormAdd, user}) =>{
             </Row>
             </Card>
 
-            <FormatPhoto photo={photo} setPhoto={setPhoto} thema={thema} />
+            <FormatAll photo={photo} setPhoto={setPhoto} thema={thema} price={price} setPrice={setPrice} />
             
             <Card className='mt-3'>
                 <Row className='p-3'>
@@ -185,12 +183,12 @@ export const FormAdd = ({isFormAdd, setIsFormAdd, user}) =>{
                     <Col md={3}>
                         <Form.Label size='sm'>Внутренний код:</Form.Label>
                         <FormControl defaultValue={codeInside} size='sm' disabled />
-                        <Button className='mt-2' style={{width:"100%"}} variant='light' size='sm'>copy</Button>
+                        <Button onClick={()=>navigator.clipboard.writeText(codeInside)} className='mt-2' style={{width:"100%"}} variant='light' size='sm'>copy</Button>
                     </Col>
                     <Col md={3}>
                         <Form.Label size='sm'>Почтовый код:</Form.Label>
                         <FormControl size='sm'   value={codeOutside} onChange={(e)=>setCodeOutside(e.target.value)} />
-                        <Button className='mt-2' style={{width:"100%"}} size='sm' variant='light'>copy</Button>
+                        <Button onClick={()=>navigator.clipboard.writeText(codeOutside)} className='mt-2' style={{width:"100%"}} size='sm' variant='light'>copy</Button>
                     </Col>
                 </Row>
             </Card>
