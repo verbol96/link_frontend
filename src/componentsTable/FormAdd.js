@@ -5,6 +5,8 @@ import axios from 'axios'
 import {useSelector, useDispatch} from 'react-redux'
 import {nanoid} from 'nanoid'
 import { FormatAll } from './FormatAll'
+import {CopyToClipboard} from 'react-copy-to-clipboard';
+
 
 export const FormAdd = ({isFormAdd, setIsFormAdd, user, loading}) =>{
 
@@ -86,6 +88,8 @@ export const FormAdd = ({isFormAdd, setIsFormAdd, user, loading}) =>{
         else return 'primary'
     }
 
+    
+
     return(
         <Modal size='lg' show={isFormAdd} onHide={()=>ModalClose()} dialogClassName="modal-80w">
         <Modal.Body>
@@ -111,7 +115,9 @@ export const FormAdd = ({isFormAdd, setIsFormAdd, user, loading}) =>{
                     </Row>
                     <Row>
                         <Col md={{span: 9, offset:3}}> 
-                        <Button onClick={()=>navigator.clipboard.writeText(name+' '+phone)} className='mt-2' style={{width:"100%"}} variant='light' size='sm'>copy</Button>
+                        <CopyToClipboard text={phone+ " "+name}>
+                        <Button  className='mt-2 button-copy' style={{width:"100%"}} variant='light' size='sm'>copy</Button>
+                        </CopyToClipboard>
                         </Col>
                     </Row>
                     
