@@ -1,7 +1,7 @@
 import {useDispatch} from 'react-redux'
 import {FormCheck, FormSelect} from 'react-bootstrap'
 import axios from 'axios'
-//import {useState} from 'react'
+//import React, { useState } from 'react';
 import _ from 'lodash'
 
 export const TableRow = ({el, user, setIsFormAdd, photo}) =>{
@@ -16,13 +16,12 @@ export const TableRow = ({el, user, setIsFormAdd, photo}) =>{
     const date = el.createdAt.split("T")[0].split("-")
 
     const ColorBG = [
-        'DarkSeaGreen',
-        'Teal',
-        'PaleTurquoise',
-        'LemonChiffon',
-        'LightBlue',
-        'Plum',
-        'OldLace'
+        'white',// принят
+        'MediumOrchid',//готово к печати
+        'Gold',// в печати
+        'SeaGreen',// готово к отправке
+        'FireBrick',// отправлено
+        'white'// оплачено
     ]
 
     const ChangeStatus = (event) =>{
@@ -44,27 +43,41 @@ export const TableRow = ({el, user, setIsFormAdd, photo}) =>{
             }
         }, '')
     }
+
+    const Warning = () =>{
+        let a = []
+        if(el.codeOutside){
+            a.push(<i className="bi bi-qr-code" style={{}}></i>)
+         }
+        if(user.firstClass === true){
+           a.push( <i className="bi bi-1-square-fill pr-1" style={{color:'red'}}></i>)
+        }
+        if(el.other){
+            a.push( <i className="bi bi-exclamation-square" style={{backgroundColor :'yellow'}}></i>)
+         }
+         
+        return a.map((el, index)=><span key={index}>{el} </span>)
+    }
     
     return(
-        <tr>
+        <tr style={{fontSize:13}}>
             <td style={{width: 25}}><FormCheck /></td>
             <td style={{width: 55}} onClick={()=>EditRow()}>{date[2]+"."+date[1]}</td>
             <td style={{width: 35}} onClick={()=>EditRow()}>{user.typePost + el.id}</td>
             <td onClick={()=>EditRow()}>{user.nikname}</td>
             <td onClick={()=>EditRow()}>{user.phone}</td>
             <td onClick={()=>EditRow()}>{user.city}</td>
-            <td onClick={()=>EditRow()} style={{fontSize:13}}>{PhotoShow()}</td>
-            <td onClick={()=>EditRow()}>warn</td>
-            <td style={{width: 100, textAlign:'right'}} onClick={()=>EditRow()}>{el.price}</td>
+            <td onClick={()=>EditRow()} style={{fontSize:11}}>{PhotoShow()}</td>
+            <td style={{width:66}} onClick={()=>EditRow()}>{Warning()}</td>
+            <td style={{width: 110, textAlign:'right', fontFamily: "Lato"}} onClick={()=>EditRow()}>{el.price}</td>
             <td>
-                <FormSelect style={{backgroundColor: ColorBG[el.status]}} size='sm' value={el.status} onChange={(e)=>ChangeStatus(e)}>
-                    <option value="1">в обработке</option>
-                    <option value="2">принят</option>
-                    <option value="3">готов к печати</option>
-                    <option value="4">в печати</option>
-                    <option value="5">упакован</option>
-                    <option value="6">отправлен</option>
-                    <option value="7">оплачен</option>
+                <FormSelect style={{backgroundColor: ColorBG[el.status-1],  fontSize: 10, margin: -3, marginRight: 0}} size='sm' value={el.status} onChange={(e)=>ChangeStatus(e)}>
+                    <option value="1">принят</option>
+                    <option value="2">готов к печати</option>
+                    <option value="3">в печати</option>
+                    <option value="4">упакован</option>
+                    <option value="5">отправлен</option>
+                    <option value="6">оплачен</option>
                 </FormSelect>
             </td>
         </tr>

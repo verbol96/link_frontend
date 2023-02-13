@@ -13,10 +13,10 @@ export const TableFull = () =>{
     const [isFormAdd, setIsFormAdd] = useState(false)
     const [selectPost, setSelectPost] = useState("All")
     const [inputSearch, setInputSearch] = useState('')
-    const [filterCheck, setFilterCheck] = useState([1,2,3,4,5])
+    const [filterCheck, setFilterCheck] = useState([1,2,3,4])
 
     const loading =(res)=>{
-        dispach({type: "saveOrder", payload: _.orderBy(_.orderBy(res.data.order, 'status', 'asc' ), 'id', 'desc' )})
+        dispach({type: "saveOrder", payload: _.orderBy(_.orderBy(res.data.order, 'id', 'desc' ), 'status', 'asc' )})
         dispach({type: "saveUser", payload: res.data.user})
         dispach({type: "savePhoto", payload: res.data.photo})
     }
@@ -24,7 +24,7 @@ export const TableFull = () =>{
     useEffect(()=>{
         axios.get('http://94.228.126.26:8001/api/order/getAll').then(
             res=> {
-                dispach({type: "saveOrder", payload: _.orderBy(_.orderBy(res.data.order, 'status', 'asc' ), 'id', 'desc' )})
+                dispach({type: "saveOrder", payload: _.orderBy(_.orderBy(res.data.order, 'id', 'desc' ), 'status', 'asc' )})
                 dispach({type: "saveUser", payload: res.data.user})
                 dispach({type: "savePhoto", payload: res.data.photo})
             }
@@ -69,11 +69,23 @@ export const TableFull = () =>{
     
     const SumPrice = () =>{
         const pr =  OrderList().reduce((sum,el)=>{
-            console.log(el.price)
             return sum+Number(el.price)
         },0)
        
         return pr
+    }
+    const SumFormat = () =>{
+        const pr =  OrderList().reduce((sum,el)=>{
+            const photo1=photo.filter(step=>step.orderId === el.id)
+            return sum+ 
+                photo1.reduce((sum1,el1)=>{
+                return sum1+Number(el1.amount)
+                },0)
+            
+        },0)
+       
+        return pr
+
     }
 
 
@@ -107,9 +119,9 @@ export const TableFull = () =>{
                     <td></td>
                     <td></td>
                     <td></td>
-                    <td>количество:</td>
+                    <td style={{fontSize: 12}}>количество: {SumFormat()}шт</td>
                     <td></td>
-                    <td style={{fontSize: 12}}>сумма: {SumPrice()}</td>
+                    <td style={{fontSize: 12}}>сумма: {SumPrice().toFixed(2)}р</td>
                     <td></td>
                 </tr>
                 </tfoot>
