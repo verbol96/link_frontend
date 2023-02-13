@@ -14,6 +14,7 @@ export const FormAdd = ({isFormAdd, setIsFormAdd, user, loading}) =>{
     const editRow = useSelector(state=>state.order.editRow)
     const photoAll = useSelector(state=>state.order.photo)
     const userOne = user.filter(el=>el.id === editRow.userId)
+    const [show, setShow] = useState(false);
 
     const [userId] = useState( editRow.id>0 ? userOne[0].id : '')
     const [name, setName] = useState( editRow.id>0 ? userOne[0].name : '')
@@ -88,10 +89,18 @@ export const FormAdd = ({isFormAdd, setIsFormAdd, user, loading}) =>{
         else return 'primary'
     }
 
-    
+    const CopyText =()=>{
+        if(show===true){
+            setTimeout(()=>{
+                setShow(false)
+            },2000)
+            return 'готово!'
+        }
+    }
 
     return(
         <Modal size='lg' show={isFormAdd} onHide={()=>ModalClose()} dialogClassName="modal-80w">
+            
         <Modal.Body>
             {editRow.id>0?
             <Alert size="sm" variant ={thema()}>Редактирование заказа</Alert>:
@@ -116,9 +125,12 @@ export const FormAdd = ({isFormAdd, setIsFormAdd, user, loading}) =>{
                     <Row>
                         <Col md={{span: 9, offset:3}}> 
                         <CopyToClipboard text={phone+ " "+name}>
-                        <Button  className='mt-2 button-copy' style={{width:"100%"}} variant='light' size='sm'>copy</Button>
+                            <Button  onClick={() => setShow(true)} className='mt-2 button-copy' style={{width:"100%"}} variant='light' size='sm'>
+                                {show?CopyText():'copy'}
+                            </Button>
                         </CopyToClipboard>
                         </Col>
+                        
                     </Row>
                     
                 </Col>
@@ -189,12 +201,17 @@ export const FormAdd = ({isFormAdd, setIsFormAdd, user, loading}) =>{
                     <Col md={3}>
                         <Form.Label size='sm'>Внутренний код:</Form.Label>
                         <FormControl defaultValue={codeInside} size='sm' disabled />
-                        <Button onClick={()=>navigator.clipboard.writeText(codeInside)} className='mt-2' style={{width:"100%"}} variant='light' size='sm'>copy</Button>
+                        <CopyToClipboard text={codeInside}>
+                        <Button className='mt-2' style={{width:"100%"}} variant='light' size='sm'>copy</Button>
+                        </CopyToClipboard>
+                        
                     </Col>
                     <Col md={3}>
                         <Form.Label size='sm'>Почтовый код:</Form.Label>
                         <FormControl size='sm'   value={codeOutside} onChange={(e)=>setCodeOutside(e.target.value)} />
-                        <Button onClick={()=>navigator.clipboard.writeText(codeOutside)} className='mt-2' style={{width:"100%"}} size='sm' variant='light'>copy</Button>
+                        <CopyToClipboard text={codeOutside || " "}>
+                            <Button className='mt-2' style={{width:"100%"}} size='sm' variant='light'>copy</Button>
+                        </CopyToClipboard>
                     </Col>
                 </Row>
             </Card>
@@ -210,8 +227,7 @@ export const FormAdd = ({isFormAdd, setIsFormAdd, user, loading}) =>{
                 </Col>
             </Row>
         </ModalFooter>
-      </Modal>
-                    
+      </Modal>     
                 
     )
 }

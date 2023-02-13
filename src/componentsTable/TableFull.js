@@ -1,5 +1,5 @@
 import {React, useEffect, useState} from 'react'
-import {Table, Row, Col, FormCheck} from 'react-bootstrap'
+import {Table, Row, Col} from 'react-bootstrap'
 import {useSelector, useDispatch} from 'react-redux'
 import { TableRow } from './TableRow'
 import axios from 'axios'
@@ -96,32 +96,19 @@ export const TableFull = () =>{
 
         <Row className='justify-content-center' style={{backgroundColor: "rgb(232, 232, 232)", minHeight: 1000}}>
             <Col md={10} >
-            <Table size='sm' className='mt-2' bordered hover  style={{backgroundColor:"white"}} >
-                <thead style={{backgroundColor:"grayText"}}>
-                <tr>
-                    <td><FormCheck /></td>
-                    <td>date</td>
-                    <td>id</td>
-                    <td>nikname</td>
-                    <td>phone</td>
-                    <td>city</td>
-                    <td>photo</td>
-                    <td>warn</td>
-                    <td>price</td>
-                    <td>status</td>
-                </tr>
-                </thead>
-                <tfoot style={{backgroundColor:"grayText"}}>
+            <Table size='sm' className='mt-4' bordered hover  style={{backgroundColor:"white"}} >
+                
+                <tfoot style={{backgroundColor:"Silver	"}}>
                 <tr>
                     <td></td>
                     <td></td>
+                    <td style={{fontSize: 11}}>K={OrderList().length}</td>
                     <td></td>
                     <td></td>
                     <td></td>
+                    <td style={{fontSize: 11}}>N={SumFormat()}шт</td>
                     <td></td>
-                    <td style={{fontSize: 12}}>количество: {SumFormat()}шт</td>
-                    <td></td>
-                    <td style={{fontSize: 12}}>сумма: {SumPrice().toFixed(2)}р</td>
+                    <td style={{ textAlign:'right', fontFamily: "Geneva", fontSize:10}}>S={SumPrice().toFixed(2)}</td>
                     <td></td>
                 </tr>
                 </tfoot>

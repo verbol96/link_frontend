@@ -17,10 +17,10 @@ export const TableRow = ({el, user, setIsFormAdd, photo}) =>{
 
     const ColorBG = [
         'white',// принят
-        'MediumOrchid',//готово к печати
+        'Orchid',//готово к печати
         'Gold',// в печати
-        'SeaGreen',// готово к отправке
-        'FireBrick',// отправлено
+        'YellowGreen',// готово к отправке
+        'LightSalmon',// отправлено
         'white'// оплачено
     ]
 
@@ -58,22 +58,30 @@ export const TableRow = ({el, user, setIsFormAdd, photo}) =>{
          
         return a.map((el, index)=><span key={index}>{el} </span>)
     }
+
+    const CheckChange =(e)=>{
+        if(e){
+            dispach({type:'getPrintList', payload: user})
+        }else{
+            dispach({type:'setPrintList', payload: user})
+        }
+    }
     
     return(
         <tr style={{fontSize:13}}>
-            <td style={{width: 25}}><FormCheck /></td>
-            <td style={{width: 55}} onClick={()=>EditRow()}>{date[2]+"."+date[1]}</td>
-            <td style={{width: 35}} onClick={()=>EditRow()}>{user.typePost + el.id}</td>
-            <td onClick={()=>EditRow()}>{user.nikname}</td>
-            <td onClick={()=>EditRow()}>{user.phone}</td>
-            <td onClick={()=>EditRow()}>{user.city}</td>
+            <td style={{width: 25}}><FormCheck onChange={(e)=>CheckChange(e.target.checked)} /></td>
+            <td style={{width: 45, textAlign:'center', fontFamily: "Geneva", fontSize:12}} onClick={()=>EditRow()}>{date[2]+"."+date[1]}</td>
+            <td style={{width: 35, textAlign:'center', color: 'DarkSlateGrey', fontSize:12, fontFamily: "Arial Black"}} onClick={()=>EditRow()}>{user.typePost + el.id}</td>
+            <td style={{width: 180, overflow:'hidden', whiteSpace: 'nowrap'}} onClick={()=>EditRow()}>{user.nikname}</td>
+            <td style={{width: 140, textAlign:'center', fontFamily: "Geneva", fontSize:11}} onClick={()=>EditRow()}>{user.phone}</td>
+            <td style={{width: 140, textAlign:'center'}} onClick={()=>EditRow()}>{user.city}</td>
             <td onClick={()=>EditRow()} style={{fontSize:11}}>{PhotoShow()}</td>
-            <td style={{width:66}} onClick={()=>EditRow()}>{Warning()}</td>
-            <td style={{width: 110, textAlign:'right', fontFamily: "Lato"}} onClick={()=>EditRow()}>{el.price}</td>
-            <td>
+            <td style={{width:56}} onClick={()=>EditRow()}>{Warning()}</td>
+            <td style={{width: 110, textAlign:'right', fontFamily: "Geneva", fontSize:11}} onClick={()=>EditRow()}>{el.price}</td>
+            <td style={{width: 110}}>
                 <FormSelect style={{backgroundColor: ColorBG[el.status-1],  fontSize: 10, margin: -3, marginRight: 0}} size='sm' value={el.status} onChange={(e)=>ChangeStatus(e)}>
                     <option value="1">принят</option>
-                    <option value="2">готов к печати</option>
+                    <option value="2">обработан</option>
                     <option value="3">в печати</option>
                     <option value="4">упакован</option>
                     <option value="5">отправлен</option>

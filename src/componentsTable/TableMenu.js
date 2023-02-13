@@ -1,10 +1,12 @@
 import './table.css'
 import {Button, Col,Row, FormSelect, FormControl, Toast, FormCheck, FormLabel} from 'react-bootstrap'
 import {useState} from 'react'
+import {useNavigate} from 'react-router-dom'
 
 export const TableMenu = ({setIsFormAdd, setSelectPost, selectPost, inputSearch, setInputSearch, filterCheck, setFilterCheck}) =>{
 
     const [show, setShow] = useState(false);
+    const navigate = useNavigate()
 
     const Check = (e, id) =>{
         if(e){
@@ -26,17 +28,17 @@ export const TableMenu = ({setIsFormAdd, setSelectPost, selectPost, inputSearch,
                     </Button>
                 </Col>
                 <Col md={2}>
-                    <FormSelect size='sm' className='mt-2' value={selectPost} onChange={(e)=>setSelectPost(e.target.value)} >
+                    <FormSelect style={{backgroundColor: 'rgb(30, 52, 52)', color: 'white'}} size='sm' className='mt-2' value={selectPost} onChange={(e)=>setSelectPost(e.target.value)} >
                         <option value={'All'}>Европочта и Белпочта</option>
                         <option value={"E"}>только Европочта</option>
                         <option value={"R"}>только Белпочта</option>
                     </FormSelect>
                 </Col>
                 <Col md={2}>
-                    <FormControl size='sm' value={inputSearch} placeholder='поиск...' className='mt-2' onChange={(e)=>setInputSearch(e.target.value)} />
+                    <FormControl  style={{backgroundColor: 'rgb(30, 52, 52)', color: 'white'}} size='sm' value={inputSearch} placeholder='поиск...' className='mt-2' onChange={(e)=>setInputSearch(e.target.value)} />
                 </Col>
                 <Col md={{span: 1, offset:3}}>
-                    <Button size='sm' variant='dark' className='mt-2' style={{width: "100%"}}>
+                    <Button onClick={()=>navigate('/print')} size='sm' variant='dark' className='mt-2' style={{width: "100%"}}>
                         <i className="bi bi-printer"></i>
                     </Button>
                 </Col>
