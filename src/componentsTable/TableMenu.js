@@ -2,11 +2,14 @@ import './table.css'
 import {Button, Col,Row, FormSelect, FormControl, Toast, FormCheck, FormLabel} from 'react-bootstrap'
 import {useState} from 'react'
 import {useNavigate} from 'react-router-dom'
+import { LeftMenu } from '../componentsAdmin.js/LeftMenu'
+import {useDispatch} from 'react-redux'
 
 export const TableMenu = ({setIsFormAdd, setSelectPost, selectPost, inputSearch, setInputSearch, filterCheck, setFilterCheck}) =>{
 
     const [show, setShow] = useState(false);
     const navigate = useNavigate()
+    const dispach = useDispatch()
 
     const Check = (e, id) =>{
         if(e){
@@ -21,8 +24,14 @@ export const TableMenu = ({setIsFormAdd, setSelectPost, selectPost, inputSearch,
 
     return(
         <div className="TableMenu">
+            <LeftMenu />
             <Row>
-                <Col md={{span: 1, offset:1}}>
+                <Col md={1}>
+                    <Button variant='dark' className='mt-2' style={{marginLeft: '5%', color: 'black', backgroundColor: 'DarkSlateGrey'}} size='sm' onClick={()=>dispach({type:'showLeftMenu'})}>
+                        <i className="bi bi-list"></i>
+                    </Button>
+                </Col>
+                <Col md={{span: 1}}>
                     <Button size='sm' variant='dark' className='mt-2' style={{width: "100%"}} onClick={()=>{setIsFormAdd(true)}}>
                         <i className="bi bi-folder-plus"></i>
                     </Button>

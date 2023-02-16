@@ -7,10 +7,10 @@ export const FormatOne = ({index, el, thema, DeleteFormat, photo, setPhoto}) =>{
     const Update = (e, prop) =>{
         if(prop==='type'){
             switch(e.target.value){
-                case 'photo': return setPhoto([...photo.slice(0, index), {type: "photo", format: "10x15", amount: "1",  paper: 'glossy'}, ...photo.slice(index + 1)])
+                case 'photo': return setPhoto([...photo.slice(0, index), {type: "photo", format: "А6", amount: "1",  paper: 'glossy'}, ...photo.slice(index + 1)])
                 case 'holst': return setPhoto([...photo.slice(0, index), {type: "holst", format: "30x40", amount: "1",  paper: 'glossy'}, ...photo.slice(index + 1)])
-                case 'magnit': return setPhoto([...photo.slice(0, index), {type: "magnit", format: "5x8", amount: "1",  paper: 'glossy'}, ...photo.slice(index + 1)])
-                default: return setPhoto([...photo.slice(0, index), {type: "photo", format: "10x15", amount: "1",  paper: 'glossy'}, ...photo.slice(index + 1)])
+                case 'magnit': return setPhoto([...photo.slice(0, index), {type: "magnit", format: "магнит", amount: "1",  paper: 'glossy'}, ...photo.slice(index + 1)])
+                default: return setPhoto([...photo.slice(0, index), {type: "photo", format: "А6", amount: "1",  paper: 'glossy'}, ...photo.slice(index + 1)])
             }
         }
         setPhoto([...photo.slice(0, index), {...photo[index], [prop]: e.target.value}, ...photo.slice(index + 1)])
@@ -23,12 +23,17 @@ export const FormatOne = ({index, el, thema, DeleteFormat, photo, setPhoto}) =>{
     ]
 
     const FormatPhoto = [
-        {value: "10x15", title: '10x15'},
-        {value: "10x10", title: '10x10'},
-        {value: "polar", title: 'polar'},
-        {value: "miniPol", title: 'miniPol'},
-        {value: "15x20", title: '15x20'},
-        {value: "20x30", title: '20x30'}
+        {value: "а6", title: 'а6'},
+        {value: "дд", title: 'дд'},
+        {value: "пол", title: 'пол'},
+        {value: "мини", title: 'мини'},
+        {value: "а5", title: 'а5'},
+        {value: "а4", title: 'а4'},
+        {value: "<а7", title: '<а7'},
+        {value: "<а6", title: '<а6'},
+        {value: "<а5", title: '<а5'},
+        {value: "<а4", title: '<а4'}
+
     ]
     const FormatHolst = [
         {value: "30x40", title: '30x40'},
@@ -39,7 +44,7 @@ export const FormatOne = ({index, el, thema, DeleteFormat, photo, setPhoto}) =>{
         {value: "55x80", title: '55x80'}
     ]
     const FormatMagnit = [
-        {value: "5x8", title: '5x8'}
+        {value: "магнит", title: 'магнит'}
     ]
 
     return(

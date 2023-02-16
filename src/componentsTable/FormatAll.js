@@ -6,19 +6,23 @@ export const FormatAll = ({photo, setPhoto, thema, price, setPrice}) =>{
 
     const PriceList = (format) =>{
         switch(format){
-            case '10x15': return 0.6
-            case '10x10': return 0.65
-            case 'polar': return 0.65
-            case 'miniPol': return 0.4
-            case '15x20': return 1.2
-            case '20x30': return 2.4
+            case '<а7': return 0.4
+            case '<а6': return 0.65
+            case '<а5': return 1.2
+            case '<а4': return 2.4
+            case 'а6': return 0.6
+            case 'дд': return 0.65
+            case 'пол': return 0.65
+            case 'мини': return 0.4
+            case 'а5': return 1.2
+            case 'а4': return 2.4
             case '30x40': return 32
             case '40x40': return 37
             case '40x55': return 43
             case '55x55': return 48
             case '55x80': return 60
             case '50x70': return 54
-            case '5x8': return 3
+            case 'магнит': return 3
             default: return 0
         }
     }
@@ -34,7 +38,7 @@ export const FormatAll = ({photo, setPhoto, thema, price, setPrice}) =>{
     const AddFormat = () =>{
         const data = {
             type: "photo",
-            format: "10x15",
+            format: "а6",
             amount: "1",
             paper: 'glossy'
         }

@@ -1,5 +1,6 @@
 import Print from "./pages/Print"
 import Table from "./pages/Table"
+import UsersDB from "./pages/UsersDB"
 import Web from "./pages/Web"
 
 export const routes = [
@@ -14,5 +15,9 @@ export const routes = [
     {
         path: '/print',
         Component: Print
+    },
+    {
+        path: '/usersDB',
+        Component: UsersDB
     }
 ]

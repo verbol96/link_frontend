@@ -1,34 +1,40 @@
-import {Modal, Button, Row, Col, ModalFooter, FormLabel, FormControl , Alert, FormSelect, Card, Form, FormCheck} from 'react-bootstrap'
+import {Modal, Button, Row, Col,  FormLabel, FormControl , FormSelect, Card, Form, FormCheck, Alert} from 'react-bootstrap'
 import {useState} from 'react'
 import './table.css'
 import axios from 'axios'
-import {useSelector, useDispatch} from 'react-redux'
+import { useDispatch} from 'react-redux'
 import {nanoid} from 'nanoid'
 import { FormatAll } from './FormatAll'
 import {CopyToClipboard} from 'react-copy-to-clipboard';
+import useKeypress from 'react-use-keypress';
 
 
-export const FormAdd = ({isFormAdd, setIsFormAdd, user, loading}) =>{
+export const FormAdd = ({isFormAdd, setIsFormAdd, user, adressOrder, loading, path, editRow, photoAll, nextShow, indexR}) =>{
+
+
+    
+    window.scrollTo(0, indexR*100-1000)  //прокурутка при модальном окне
 
     const dispach = useDispatch()
-    const editRow = useSelector(state=>state.order.editRow)
-    const photoAll = useSelector(state=>state.order.photo)
-    const userOne = user.filter(el=>el.id === editRow.userId)
+    
     const [show, setShow] = useState(false);
+    const [status, setStatus] = useState( editRow.id>0 ? editRow.status : '1')
 
-    const [userId] = useState( editRow.id>0 ? userOne[0].id : '')
-    const [name, setName] = useState( editRow.id>0 ? userOne[0].name : '')
-    const [nikname, setNikname] = useState( editRow.id>0 ? userOne[0].nikname : '')
-    const [phone, setPhone] = useState(editRow.id>0 ? userOne[0].phone : '')
+    const [userId] = useState( editRow.id>0 ? user.id : '')
+    const [adressId] = useState( editRow.id>0 ? adressOrder.id : '')
 
-    const [typePost, setTypePost] = useState(editRow.id>0 ? userOne[0].typePost : 'E')
-    const [city, setCity] = useState(editRow.id>0 ? userOne[0].city : '')
-    const [adress, setAdress] = useState(editRow.id>0 ? userOne[0].adress : '')
+    const [name, setName] = useState( editRow.id>0 ? user.name : '')
+    const [nikname, setNikname] = useState( editRow.id>0 ? user.nikname : '')
+    const [phone, setPhone] = useState(editRow.id>0 ? user.phone : '')
 
-    const [oblast, setOblast] = useState(editRow.id>0 ? userOne[0].oblast : '')
-    const [raion, setRaion] = useState(editRow.id>0 ? userOne[0].raion : '')
-    const [postCode, setPostCode] = useState(editRow.id>0 ? userOne[0].postCode : '')
-    const [firstClass, setFirstClass] = useState(editRow.id>0 ? userOne[0].firstClass : false)
+    const [typePost, setTypePost] = useState(editRow.id>0 ? adressOrder.typePost : 'E')
+    const [city, setCity] = useState(editRow.id>0 ? adressOrder.city : '')
+    const [adress, setAdress] = useState(editRow.id>0 ? adressOrder.adress : '')
+
+    const [oblast, setOblast] = useState(editRow.id>0 ? adressOrder.oblast : '')
+    const [raion, setRaion] = useState(editRow.id>0 ? adressOrder.raion : '')
+    const [postCode, setPostCode] = useState(editRow.id>0 ? adressOrder.postCode : '')
+    const [firstClass, setFirstClass] = useState(editRow.id>0 ? adressOrder.firstClass : false)
     
     const [other, setOther] =useState(editRow.id>0 ? editRow.other : '')
     const [codeInside] =useState(editRow.id>0 ? editRow.codeInside : nanoid(6))
@@ -50,6 +56,7 @@ export const FormAdd = ({isFormAdd, setIsFormAdd, user, loading}) =>{
             "postCode": postCode,
             "photo": photo, 
             "userId": userId,
+            "adressId": adressId,
             "other":other,
             "codeInside": codeInside,
             "codeOutside": codeOutside,
@@ -57,27 +64,34 @@ export const FormAdd = ({isFormAdd, setIsFormAdd, user, loading}) =>{
             "firstClass": firstClass
         }
 
+
         editRow.id>0 ?
-        axios.put(`http://94.228.126.26:8001/api/order/updateOrder/${editRow.id}`, data).then(()=>{
-            axios.get('http://94.228.126.26:8001/api/order/getAll').then(
+        axios.put(path+`api/order/updateOrder/${editRow.id}`, data).then(()=>{
+            axios.get(path+'api/order/getAll').then(
             res=> { loading(res)}
         )})
         : 
-        axios.post('http://94.228.126.26:8001/api/order/addOrder', data).then(()=>{
-            axios.get('http://94.228.126.26:8001/api/order/getAll').then(
+        axios.post(path+'api/order/addOrder', data).then(()=>{
+            axios.get(path+'api/order/getAll').then(
                 res=> { loading(res)}
         )})
+
+        if(editRow.id>0 ) ChangeStatus()
+        
         ModalClose()
     }
 
     const ModalClose = () =>{
+
         setIsFormAdd(false)
-        dispach({type:"editRow", payload: 0})
+        setTimeout(()=>{
+            dispach({type:"editRow", payload: 0})
+        }, 1500) //время подсветки строки
     }
 
     const DeleteBtn = () =>{
-        axios.delete(`http://94.228.126.26:8001/api/order/deleteOrder/${editRow.id}`).then(()=>{
-            axios.get('http://94.228.126.26:8001/api/order/getAll').then(
+        axios.delete(path+`api/order/deleteOrder/${editRow.id}`).then(()=>{
+            axios.get(path+'api/order/getAll').then(
                 res=> { loading(res)}
         )})
         setIsFormAdd(false)
@@ -93,18 +107,53 @@ export const FormAdd = ({isFormAdd, setIsFormAdd, user, loading}) =>{
         if(show===true){
             setTimeout(()=>{
                 setShow(false)
-            },2000)
+            },1000)
             return 'готово!'
         }
     }
 
+    useKeypress(['ArrowUp', 'ArrowDown'], (event) => {
+        if (event.key === 'ArrowUp') {
+            nextShow(+1)
+        } else {
+            nextShow(-1)
+        }
+        
+      })
+
+    const ChangeStatus = () =>{
+        axios.put(path+`api/order/updateStatus/${editRow.id}`, {'status': status})
+    }
+
+    const [showDelete, setShowDelete] = useState(false)
+
+
     return(
-        <Modal size='lg' show={isFormAdd} onHide={()=>ModalClose()} dialogClassName="modal-80w">
+        <>
+        <Modal show={showDelete} onHide={()=>setShowDelete(false)}centered>
+            <Row>
+                <Col>
+                    <Alert variant='danger' style={{textAlign:'center'}}>Уверены, что хотите удалить?</Alert>
+                </Col>
+            </Row>
+            <Row className="m-2 justify-content-center">
+                <Col md={6} style={{textAlign: 'center'}}>
+                <Button  variant='danger' onClick={()=>DeleteBtn()}>да</Button>
+                </Col>
+                <Col style={{textAlign: 'center'}}>
+                <Button  variant='secondary' md={6} onClick={()=>setShowDelete(false)}>нет</Button>
+                </Col>
+            </Row>
+
             
+        </Modal>
+        <Modal size='lg' show={isFormAdd} onHide={()=>ModalClose()} dialogClassName="modal-80w">
+        
         <Modal.Body>
             {editRow.id>0?
-            <Alert size="sm" variant ={thema()}>Редактирование заказа</Alert>:
-            <Alert size="sm" variant ={thema()}>Добавление заказа</Alert>
+            <Card style={{height: 37, backgroundColor:'SeaGreen', color:'white', fontFamily: 'Tahoma', textAlign:'center', fontSize: 21}}>Редактирование заказа</Card>:
+            <Card style={{height: 37, backgroundColor:'RoyalBlue', color:'white',fontFamily: 'Tahoma', textAlign:'center', fontSize: 21}}>Добавление заказа</Card>
+            
             }
             
             <Card className='mt-3'>
@@ -216,18 +265,29 @@ export const FormAdd = ({isFormAdd, setIsFormAdd, user, loading}) =>{
                 </Row>
             </Card>
 
-            
-        </Modal.Body>
-        <ModalFooter>
-            <Row>
+            <Row className='mt-4'>
                 <Col>
+                    <Button variant ={thema()} onClick={()=>nextShow(+1)}><i className="bi bi-arrow-up"></i></Button>{" "}
+                    <Button variant ={thema()} onClick={()=>nextShow(-1)}><i className="bi bi-arrow-down"></i></Button>{" "}
+                </Col>
+                <Col style={{textAlign: 'center'}}>
+                    <FormSelect value={status} onChange={(e)=>setStatus(e.target.value)}>
+                        <option value="1">принят</option>
+                        <option value="2">обработан</option>
+                        <option value="3">в печати</option>
+                        <option value="4">упакован</option>
+                        <option value="5">отправлен</option>
+                        <option value="6">оплачен</option>
+                    </FormSelect>
+                </Col>
+                <Col style={{textAlign: 'right'}}>
                     <Button variant ={thema()} onClick={()=>SendToDB()}>Сохранить</Button>{" "}
-                    <Button variant="light" onClick={()=>ModalClose()}>Отмена</Button>{" "}
-                    <Button variant="light" onClick={()=>DeleteBtn()}>Удалить</Button>
+                    <Button variant="light" onClick={()=>setShowDelete(true)}>Удалить</Button>
                 </Col>
             </Row>
-        </ModalFooter>
-      </Modal>     
-                
+            
+        </Modal.Body>
+        </Modal>     
+         </>   
     )
 }

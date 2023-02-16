@@ -7,7 +7,11 @@ import { FormAdd } from './FormAdd'
 import { TableMenu } from './TableMenu'
 import _ from 'lodash'
 
+
 export const TableFull = () =>{
+
+    const path = 'http://94.228.126.26:8001/' //для server
+    //const path = 'http://localhost:8001/' //для local
 
     const dispach = useDispatch()
     const [isFormAdd, setIsFormAdd] = useState(false)
@@ -19,43 +23,50 @@ export const TableFull = () =>{
         dispach({type: "saveOrder", payload: _.orderBy(_.orderBy(res.data.order, 'id', 'desc' ), 'status', 'asc' )})
         dispach({type: "saveUser", payload: res.data.user})
         dispach({type: "savePhoto", payload: res.data.photo})
+        dispach({type: "saveAdress", payload: res.data.adress})
     }
 
     useEffect(()=>{
-        axios.get('http://94.228.126.26:8001/api/order/getAll').then(
+        axios.get( path+'api/order/getAll').then(
             res=> {
                 dispach({type: "saveOrder", payload: _.orderBy(_.orderBy(res.data.order, 'id', 'desc' ), 'status', 'asc' )})
                 dispach({type: "saveUser", payload: res.data.user})
                 dispach({type: "savePhoto", payload: res.data.photo})
+                dispach({type: "saveAdress", payload: res.data.adress})
             }
         )
+        
     },[isFormAdd, dispach])
 
     const orderFull = useSelector(state=>state.order.order)
     const user = useSelector(state=>state.order.user)
     const photo = useSelector(state=>state.order.photo)
+    const adress = useSelector(state=>state.order.adress)
+    const editRow = useSelector(state=>state.order.editRow)
 
+    
     const OrderList = () =>{
 
         //фильтор по чекбоксу
-        let order = orderFull.filter(s=>filterCheck.includes(s.status))
+        let order = orderFull.filter(s=>filterCheck.includes(Number(s.status)))
         //фильтор по поиску
         order = order.filter(el=>{
             const user1 = user.filter(step=>step.id=== el.userId)[0]
-            const str = user1.city.toString()+user1.nikname.toString()+user1.phone.toString()
+            const adress1 = adress.filter(step=>step.id=== el.adressId)[0]
+            const str = adress1.city.toString()+user1.nikname.toString()+user1.phone.toString()
             return str.toLowerCase().includes(inputSearch.toLowerCase() )
         })
         //фильтор по типу почты
         switch(selectPost){
             case 'E': return order.filter(el=>{
-                const user1 = user.filter(step=>step.id=== el.userId)[0]
-                if(user1.typePost==="E"){
+                const adress1 = adress.filter(step=>step.id=== el.adressId)[0]
+                if(adress1.typePost==="E"){
                     return true
                     } else return false
             })
             case 'R': return order.filter(el=>{
-                const user1 = user.filter(step=>step.id=== el.userId)[0]
-                if(user1.typePost==="R"){
+                const adress1 = adress.filter(step=>step.id=== el.adressId)[0]
+                if(adress1.typePost==="R"){
                     return true
                     } else return false
             })
@@ -87,8 +98,26 @@ export const TableFull = () =>{
         return pr
 
     }
+    const [indexR, setIndexR] = useState(0) //для прокрутки модального окна
+    const nextShow = (k) =>{
 
-
+        let i =0
+        OrderList().forEach((el, index)=>{
+            if(editRow.id ===el.id){
+                setIndexR(index)
+                return i=index
+            } 
+            }
+        )
+        
+        const next = OrderList().filter((el,index)=>(index+k) ===i)[0]
+        if (typeof next !== "undefined" && next !== null){
+            dispach({type: "editRow", payload: next})
+            setIsFormAdd(false)
+            setTimeout(()=>setIsFormAdd(true), 100)
+        }
+    }
+    
     return(
         <div>
         <TableMenu setIsFormAdd={setIsFormAdd} selectPost= {selectPost} setSelectPost={setSelectPost}
@@ -114,13 +143,17 @@ export const TableFull = () =>{
                 </tfoot>
                 <tbody>
                     {OrderList().map((el,index)=><TableRow key={index} el={el} user={user.filter(step=>step.id === el.userId)[0]} 
+                    adressOrder={adress.filter(step=>step.id === el.adressId)[0]} path={path} isFormAdd={isFormAdd}
                         setIsFormAdd={setIsFormAdd} photo={photo.filter(step=>step.orderId === el.id)} />)}
                 </tbody>
              </Table>
             </Col>
         </Row>
-        {isFormAdd?<FormAdd isFormAdd={isFormAdd} setIsFormAdd={setIsFormAdd} user={user} loading={loading} />:null}
+        {isFormAdd?<FormAdd isFormAdd={isFormAdd} setIsFormAdd={setIsFormAdd} user={user.filter(el=>el.id === editRow.userId)[0]}
+        adressOrder={adress.filter(el=>el.id === editRow.adressId)[0]} loading={loading} path={path} editRow={editRow} photoAll={photo}
+        nextShow={nextShow} indexR={indexR} />:null}
 
         </div>
     )
 }
+
