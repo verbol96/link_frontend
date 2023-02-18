@@ -125,7 +125,7 @@ export const TableFull = () =>{
 
         <Row className='justify-content-center' style={{backgroundColor: "rgb(232, 232, 232)", minHeight: 1000}}>
             <Col md={10} >
-            <Table size='sm' className='mt-4' bordered hover  style={{backgroundColor:"white"}} >
+            <Table responsive size='sm' className='mt-4' bordered hover  style={{backgroundColor:"white"}} >
                 
                 <tfoot style={{backgroundColor:"Silver	"}}>
                 <tr>

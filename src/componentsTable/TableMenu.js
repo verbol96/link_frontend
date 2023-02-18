@@ -26,32 +26,33 @@ export const TableMenu = ({setIsFormAdd, setSelectPost, selectPost, inputSearch,
         <div className="TableMenu">
             <LeftMenu />
             <Row>
-                <Col md={1}>
-                    <Button variant='dark' className='mt-2' style={{marginLeft: '5%', color: 'black', backgroundColor: 'DarkSlateGrey'}} size='sm' onClick={()=>dispach({type:'showLeftMenu'})}>
-                        <i className="bi bi-list"></i>
+                <Col md={1} xs={2}>
+                    <Button variant='dark' className='mt-2' style={{ marginLeft: '5%', color: 'black', backgroundColor: 'DarkSlateGrey'}} size='sm' onClick={()=>dispach({type:'showLeftMenu'})}>
+                        <i style={{textAlign:'center'}} className="bi bi-list"></i>
                     </Button>
                 </Col>
-                <Col md={{span: 1}}>
+                <Col md={{span: 1, offset: 0}}  xs={{span: 2, offset: 0}}>
                     <Button size='sm' variant='dark' className='mt-2' style={{width: "100%"}} onClick={()=>{setIsFormAdd(true)}}>
                         <i className="bi bi-folder-plus"></i>
                     </Button>
                 </Col>
-                <Col md={2}>
+                <Col md={2} xs={8}>
+                    <FormControl  style={{backgroundColor: 'rgb(30, 52, 52)', color: 'white'}} size='sm' value={inputSearch} placeholder='поиск...' className='mt-2' onChange={(e)=>setInputSearch(e.target.value)} />
+                </Col>
+                <Col md={2} xs={8}>
                     <FormSelect style={{backgroundColor: 'rgb(30, 52, 52)', color: 'white'}} size='sm' className='mt-2' value={selectPost} onChange={(e)=>setSelectPost(e.target.value)} >
                         <option value={'All'}>Европочта и Белпочта</option>
                         <option value={"E"}>только Европочта</option>
                         <option value={"R"}>только Белпочта</option>
                     </FormSelect>
                 </Col>
-                <Col md={2}>
-                    <FormControl  style={{backgroundColor: 'rgb(30, 52, 52)', color: 'white'}} size='sm' value={inputSearch} placeholder='поиск...' className='mt-2' onChange={(e)=>setInputSearch(e.target.value)} />
-                </Col>
-                <Col md={{span: 1, offset:3}}>
-                    <Button onClick={()=>navigate('/print')} size='sm' variant='dark' className='mt-2' style={{width: "100%"}}>
+                
+                <Col md={{span: 1, offset:3}} xs={1}>
+                    <Button onClick={()=>navigate('/print')} size='sm' variant='dark' className='mt-2 printBtn' style={{width: "100%"}}>
                         <i className="bi bi-printer"></i>
                     </Button>
                 </Col>
-                <Col md={{span: 1}}>
+                <Col md={{span: 1}} xs={3}>
                     <Button size='sm' variant='dark' className='mt-2' style={{width: "100%"}} onClick={()=>setShow(!show)} >
                         <i className="bi bi-filter-square"></i>
                     </Button>
