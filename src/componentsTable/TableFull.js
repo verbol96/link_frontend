@@ -120,7 +120,7 @@ export const TableFull = () =>{
     
     return(
         <>
-        <TableMenu setIsFormAdd={setIsFormAdd} selectPost= {selectPost} setSelectPost={setSelectPost}
+        <TableMenu setIsFormAdd={setIsFormAdd} selectPost= {selectPost} setSelectPost={setSelectPost} editRow={editRow}
             inputSearch={inputSearch} setInputSearch={setInputSearch} filterCheck={filterCheck} setFilterCheck={setFilterCheck} />
 
         <Row className='justify-content-center' style={{backgroundColor: "rgb(232, 232, 232)", minHeight: 1000, width: '103%', overflow: 'hidden'}}>

@@ -5,7 +5,7 @@ import {useNavigate} from 'react-router-dom'
 import { LeftMenu } from '../componentsAdmin.js/LeftMenu'
 import {useDispatch} from 'react-redux'
 
-export const TableMenu = ({setIsFormAdd, setSelectPost, selectPost, inputSearch, setInputSearch, filterCheck, setFilterCheck}) =>{
+export const TableMenu = ({setIsFormAdd, setSelectPost, selectPost, inputSearch, setInputSearch, filterCheck, setFilterCheck, editRow}) =>{
 
     const [show, setShow] = useState(false);
     const navigate = useNavigate()
@@ -22,6 +22,13 @@ export const TableMenu = ({setIsFormAdd, setSelectPost, selectPost, inputSearch,
 
     }
 
+    const AddForm = () =>{
+        if(editRow === 0){
+            setIsFormAdd(true)
+        }
+    }
+    
+
     return(
         <div className="TableMenu">
             <LeftMenu />
@@ -32,7 +39,7 @@ export const TableMenu = ({setIsFormAdd, setSelectPost, selectPost, inputSearch,
                     </Button>
                 </Col>
                 <Col md={{span: 1, offset: 0}}  xs={{span: 2, offset: 0}}>
-                    <Button size='sm' variant='dark' className='mt-2' style={{width: "100%"}} onClick={()=>{setIsFormAdd(true)}}>
+                    <Button size='sm' variant='dark' className='mt-2' style={{width: "100%"}} onClick={()=>{AddForm()}}>
                         <i className="bi bi-folder-plus"></i>
                     </Button>
                 </Col>
