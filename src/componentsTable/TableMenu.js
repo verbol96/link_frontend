@@ -56,7 +56,7 @@ export const TableMenu = ({setIsFormAdd, setSelectPost, selectPost, inputSearch,
                     <Button size='sm' variant='dark' className='mt-2' style={{width: "100%"}} onClick={()=>setShow(!show)} >
                         <i className="bi bi-filter-square"></i>
                     </Button>
-                    <Toast delay={10000} autohide animation={false} bg={'Light'.toLowerCase()} className='p-2' style={{position:"absolute", right:`${100/12}%`, top:43, width: 250}} onClose={() => setShow(false)} show={show}>
+                    <Toast delay={10000} autohide animation={false} bg={'Light'.toLowerCase()} className='p-2' style={{position:"absolute", right:`${100/12}%`, top:43, width: 250, zIndex: 999}} onClose={() => setShow(false)} show={show}>
                         <Row>
                             <Col md={{span: 2, offset:2}}><FormCheck defaultChecked={true} onChange={(e)=>Check(e.target.checked, [1,2,3,4])} type="switch" /></Col>
                             <Col><FormLabel>в работе</FormLabel></Col>
