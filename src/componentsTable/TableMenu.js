@@ -25,7 +25,7 @@ export const TableMenu = ({setIsFormAdd, setSelectPost, selectPost, inputSearch,
     return(
         <div className="TableMenu">
             <LeftMenu />
-            <Row>
+            <Row style={{width: '103%'}}>
                 <Col md={1} xs={2}>
                     <Button variant='dark' className='mt-2' style={{ marginLeft: '5%', color: 'black', backgroundColor: 'DarkSlateGrey'}} size='sm' onClick={()=>dispach({type:'showLeftMenu'})}>
                         <i style={{textAlign:'center'}} className="bi bi-list"></i>

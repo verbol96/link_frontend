@@ -5,7 +5,7 @@ import {useDispatch} from 'react-redux'
 export const NavBar = () =>{
     const dispach = useDispatch()
     return (
-        <div style={{ backgroundColor: 'DarkSlateGrey', minHeight: 50, width: '100%'}}>
+        <div style={{ backgroundColor: 'DarkSlateGrey', minHeight: 50, width: '103%'}}>
             <LeftMenu />
             <Row>
                 <Col md={1}>

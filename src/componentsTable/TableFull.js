@@ -119,15 +119,15 @@ export const TableFull = () =>{
     }
     
     return(
-        <div>
+        <>
         <TableMenu setIsFormAdd={setIsFormAdd} selectPost= {selectPost} setSelectPost={setSelectPost}
             inputSearch={inputSearch} setInputSearch={setInputSearch} filterCheck={filterCheck} setFilterCheck={setFilterCheck} />
 
-        <Row className='justify-content-center' style={{backgroundColor: "rgb(232, 232, 232)", minHeight: 1000}}>
-            <Col md={10} >
-            <Table responsive size='sm' className='mt-4' bordered hover  style={{backgroundColor:"white"}} >
+        <Row className='justify-content-center' style={{backgroundColor: "rgb(232, 232, 232)", minHeight: 1000, width: '103%', overflow: 'hidden'}}>
+            <Col md={10} xs={12} style={{paddingRight: 0}} >
+            <Table responsive size='sm' className='mt-4' bordered hover  style={{backgroundColor:"white", width: '100%'}} >
                 
-                <tfoot style={{backgroundColor:"Silver	"}}>
+                <tfoot style={{backgroundColor:"Silver"}}>
                 <tr>
                     <td></td>
                     <td></td>
@@ -153,7 +153,7 @@ export const TableFull = () =>{
         adressOrder={adress.filter(el=>el.id === editRow.adressId)[0]} loading={loading} path={path} editRow={editRow} photoAll={photo}
         nextShow={nextShow} indexR={indexR} />:null}
 
-        </div>
+        </>
     )
 }
 

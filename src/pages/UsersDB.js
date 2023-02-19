@@ -39,13 +39,13 @@ const UsersDB = () =>{
         <>
             <NavBar />
             <Row>
-                <Col className='m-3' md={3}>
+                <Col className='m-3' md={3} xs={9}>
                     <FormControl  placeholder="поиск..." value={input} onChange={(e)=>setInput(e.target.value)} />
                 </Col>
             </Row>
             <Row>
                 <Col className='m-3'>
-                    <Table>
+                    <Table responsive>
                         <tbody>
                             
 
