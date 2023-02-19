@@ -144,7 +144,7 @@ export const TableFull = () =>{
                 <tbody>
                     {OrderList().map((el,index)=><TableRow key={index} el={el} user={user.filter(step=>step.id === el.userId)[0]} 
                     adressOrder={adress.filter(step=>step.id === el.adressId)[0]} path={path} isFormAdd={isFormAdd}
-                        setIsFormAdd={setIsFormAdd} photo={photo.filter(step=>step.orderId === el.id)} />)}
+                        setIsFormAdd={setIsFormAdd} photo={photo.filter(step=>step.orderId === el.id)} loading={loading} />)}
                 </tbody>
              </Table>
             </Col>

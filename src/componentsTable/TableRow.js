@@ -2,9 +2,8 @@ import {useDispatch, useSelector} from 'react-redux'
 import {FormCheck, FormSelect} from 'react-bootstrap'
 import axios from 'axios'
 //import React, { useState } from 'react';
-import _ from 'lodash'
 
-export const TableRow = ({el, user, setIsFormAdd, photo, adressOrder, path, isFormAdd}) =>{
+export const TableRow = ({el, user, setIsFormAdd, photo, adressOrder, path, isFormAdd, loading}) =>{
 
     const dispach = useDispatch()          
 
@@ -29,9 +28,7 @@ export const TableRow = ({el, user, setIsFormAdd, photo, adressOrder, path, isFo
     const ChangeStatus = (event) =>{
         axios.put(path+`api/order/updateStatus/${el.id}`, {'status': event.target.value}).then(()=>{
             axios.get(path+'api/order/getAll').then(
-            res=> {
-                dispach({type: "saveOrder", payload: _.orderBy(res.data.order,'status', 'asc' )})
-            }
+            res=> {loading(res) }
         )})
     }
     const newFormat = ['а6', 'а5', 'мини', 'пол', 'дд', 'а4', '<а4', '<а5', '<а6', '<а7', 'магнит']
@@ -87,11 +84,11 @@ export const TableRow = ({el, user, setIsFormAdd, photo, adressOrder, path, isFo
             <td style={{width: 45, textAlign:'center', fontFamily: "Geneva", fontSize:12}} onClick={()=>EditRow()}>{date[2]+"."+date[1]}</td>
             <td style={{width: 35, textAlign:'center', color: 'DarkSlateGrey', fontSize:12, fontFamily: "Arial Black"}} onClick={()=>EditRow()}>{adressOrder.typePost + (el.id%99+1)}</td>
             <td style={{width: 180, overflow:'hidden', whiteSpace: 'nowrap'}} onClick={()=>EditRow()}>{user.nikname}</td>
-            <td style={{width: 140, textAlign:'center', fontFamily: "Geneva", fontSize:11}} onClick={()=>EditRow()}>{user.phone}</td>
+            <td style={{width: 140, textAlign:'center', fontFamily: "Geneva"}} onClick={()=>EditRow()}>{user.phone}</td>
             <td style={{width: 140, textAlign:'center'}} onClick={()=>EditRow()}>{adressOrder.city}</td>
-            <td onClick={()=>EditRow()} style={{fontSize:13}}>{PhotoShow()}</td>
+            <td onClick={()=>EditRow()}>{PhotoShow()}</td>
             <td style={{width:56}} onClick={()=>EditRow()}>{Warning()}</td>
-            <td style={{width: 110, textAlign:'right', fontFamily: "Geneva", fontSize:11}} onClick={()=>EditRow()}>{el.price}</td>
+            <td style={{width: 110, textAlign:'right', fontFamily: "Geneva"}} onClick={()=>EditRow()}>{el.price}</td>
             <td style={{width: 110}}>
                 <FormSelect style={{backgroundColor: ColorBG[el.status-1],  fontSize: 12, margin: -3, marginRight: 0}} size='sm' value={el.status} onChange={(e)=>ChangeStatus(e)}>
                     <option value="1">принят</option>
