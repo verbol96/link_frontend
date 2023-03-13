@@ -2,16 +2,15 @@ import {React, useEffect, useState} from 'react'
 import {Table, Row, Col} from 'react-bootstrap'
 import {useSelector, useDispatch} from 'react-redux'
 import { TableRow } from './TableRow'
-import axios from 'axios'
 import { FormAdd } from './FormAdd'
 import { TableMenu } from './TableMenu'
 import _ from 'lodash'
+import {$host} from '../http/index'
 
 
 export const TableFull = () =>{
 
-    //const path = 'http://94.228.126.26:8001/' //для server
-    const path = 'http://localhost:8001/' //для local
+
 
     const dispach = useDispatch()
     const [isFormAdd, setIsFormAdd] = useState(false)
@@ -27,7 +26,7 @@ export const TableFull = () =>{
     }
 
     useEffect(()=>{
-        axios.get( path+'api/order/getAll').then(
+        $host.get('api/order/getAll').then(
             res=> {
                 dispach({type: "saveOrder", payload: _.orderBy(_.orderBy(res.data.order, 'id', 'desc' ), 'status', 'asc' )})
                 dispach({type: "saveUser", payload: res.data.user})
@@ -143,14 +142,14 @@ export const TableFull = () =>{
                 </tfoot>
                 <tbody>
                     {OrderList().map((el,index)=><TableRow key={index} el={el} user={user.filter(step=>step.id === el.userId)[0]} 
-                    adressOrder={adress.filter(step=>step.id === el.adressId)[0]} path={path} isFormAdd={isFormAdd}
+                    adressOrder={adress.filter(step=>step.id === el.adressId)[0]} isFormAdd={isFormAdd}
                         setIsFormAdd={setIsFormAdd} photo={photo.filter(step=>step.orderId === el.id)} loading={loading} />)}
                 </tbody>
              </Table>
             </Col>
         </Row>
         {isFormAdd?<FormAdd isFormAdd={isFormAdd} setIsFormAdd={setIsFormAdd} user={user.filter(el=>el.id === editRow.userId)[0]}
-        adressOrder={adress.filter(el=>el.id === editRow.adressId)[0]} loading={loading} path={path} editRow={editRow} photoAll={photo}
+        adressOrder={adress.filter(el=>el.id === editRow.adressId)[0]} loading={loading} editRow={editRow} photoAll={photo}
         nextShow={nextShow} indexR={indexR} />:null}
 
         </>

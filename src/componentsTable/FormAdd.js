@@ -1,12 +1,12 @@
 import {Modal, Button, Row, Col,  FormLabel, FormControl , FormSelect, Card, Form, FormCheck, Alert} from 'react-bootstrap'
 import {useState} from 'react'
 import './table.css'
-import axios from 'axios'
 import { useDispatch} from 'react-redux'
 import {nanoid} from 'nanoid'
 import { FormatAll } from './FormatAll'
-import {CopyToClipboard} from 'react-copy-to-clipboard';
-import useKeypress from 'react-use-keypress';
+import {CopyToClipboard} from 'react-copy-to-clipboard'
+import useKeypress from 'react-use-keypress'
+import {$host} from '../http/index'
 
 
 export const FormAdd = ({isFormAdd, setIsFormAdd, user, adressOrder, loading, path, editRow, photoAll, nextShow, indexR}) =>{
@@ -66,13 +66,13 @@ export const FormAdd = ({isFormAdd, setIsFormAdd, user, adressOrder, loading, pa
 
 
         editRow.id>0 ?
-        axios.put(path+`api/order/updateOrder/${editRow.id}`, data).then(()=>{
-            axios.get(path+'api/order/getAll').then(
+        $host.put(`api/order/updateOrder/${editRow.id}`, data).then(()=>{
+            $host.get('api/order/getAll').then(
             res=> { loading(res)}
         )})
         : 
-        axios.post(path+'api/order/addOrder', data).then(()=>{
-            axios.get(path+'api/order/getAll').then(
+        $host.post('api/order/addOrder', data).then(()=>{
+            $host.get('api/order/getAll').then(
                 res=> { loading(res)}
         )})
 
@@ -90,8 +90,8 @@ export const FormAdd = ({isFormAdd, setIsFormAdd, user, adressOrder, loading, pa
     }
 
     const DeleteBtn = () =>{
-        axios.delete(path+`api/order/deleteOrder/${editRow.id}`).then(()=>{
-            axios.get(path+'api/order/getAll').then(
+        $host.delete(`api/order/deleteOrder/${editRow.id}`).then(()=>{
+            $host.get('api/order/getAll').then(
                 res=> { loading(res)}
         )})
         setIsFormAdd(false)
@@ -122,7 +122,7 @@ export const FormAdd = ({isFormAdd, setIsFormAdd, user, adressOrder, loading, pa
       })
 
     const ChangeStatus = () =>{
-        axios.put(path+`api/order/updateStatus/${editRow.id}`, {'status': status})
+        $host.put(`api/order/updateStatus/${editRow.id}`, {'status': status})
     }
 
     const [showDelete, setShowDelete] = useState(false)

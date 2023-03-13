@@ -1,16 +1,16 @@
 import {useSelector, useDispatch} from 'react-redux'
 import {useEffect, useState} from 'react'
 import {Table, Button, FormControl, Row, Col} from 'react-bootstrap'
-import axios from 'axios'
 import { NavBar } from '../componentsAdmin.js/NavBar'
+import {$host} from '../http/index'
 
 const UsersDB = () =>{
-   //const path = 'http://94.228.126.26:8001/' //для server
-   const path = 'http://localhost:8001/' //для local
+
     const dispach = useDispatch()
 
    useEffect(()=>{
-    axios.get( path+'api/order/getAll').then(
+    
+    $host.get('api/order/getAll').then(
         res=> {
             dispach({type: "saveUser", payload: res.data.user})
             dispach({type: "saveOrder", payload: res.data.order})
@@ -21,7 +21,7 @@ const UsersDB = () =>{
     const orders = useSelector(state=>state.order.order)
 
     const Delete = (id) =>{
-        axios.delete(path+`api/order/deleteUser/${id}`)
+        $host.delete(`api/order/deleteUser/${id}`)
     }
 
     const isOrder = (id)=>{

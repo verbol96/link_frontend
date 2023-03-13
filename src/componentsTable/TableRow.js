@@ -1,7 +1,7 @@
 import {useDispatch, useSelector} from 'react-redux'
 import {FormCheck, FormSelect} from 'react-bootstrap'
-import axios from 'axios'
 //import React, { useState } from 'react';
+import {$host} from '../http/index'
 
 export const TableRow = ({el, user, setIsFormAdd, photo, adressOrder, path, isFormAdd, loading}) =>{
 
@@ -26,8 +26,8 @@ export const TableRow = ({el, user, setIsFormAdd, photo, adressOrder, path, isFo
     ]
 
     const ChangeStatus = (event) =>{
-        axios.put(path+`api/order/updateStatus/${el.id}`, {'status': event.target.value}).then(()=>{
-            axios.get(path+'api/order/getAll').then(
+        $host.put(`api/order/updateStatus/${el.id}`, {'status': event.target.value}).then(()=>{
+            $host.get('api/order/getAll').then(
             res=> {loading(res) }
         )})
     }
