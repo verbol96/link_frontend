@@ -32,7 +32,7 @@ export const LeftMenu = ()=>{
             </Button>
             </Row>
             <Row className='mt-3'>
-            <Button variant="dark">
+            <Button variant="dark" onClick={()=>Close('/statistic')}>
                 статистика
             </Button>
             </Row>
@@ -42,7 +42,7 @@ export const LeftMenu = ()=>{
             </Button>
             </Row>
             <Row className='mt-3'>
-            <Button variant="dark">
+            <Button variant="dark" onClick={()=>Close('/setting')}>
                 настройки
             </Button>
             </Row>

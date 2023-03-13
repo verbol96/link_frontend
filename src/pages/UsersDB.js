@@ -5,8 +5,8 @@ import axios from 'axios'
 import { NavBar } from '../componentsAdmin.js/NavBar'
 
 const UsersDB = () =>{
-   const path = 'http://94.228.126.26:8001/' //для server
-   //const path = 'http://localhost:8001/' //для local
+   //const path = 'http://94.228.126.26:8001/' //для server
+   const path = 'http://localhost:8001/' //для local
     const dispach = useDispatch()
 
    useEffect(()=>{

@@ -10,8 +10,8 @@ import _ from 'lodash'
 
 export const TableFull = () =>{
 
-    const path = 'http://94.228.126.26:8001/' //для server
-    //const path = 'http://localhost:8001/' //для local
+    //const path = 'http://94.228.126.26:8001/' //для server
+    const path = 'http://localhost:8001/' //для local
 
     const dispach = useDispatch()
     const [isFormAdd, setIsFormAdd] = useState(false)

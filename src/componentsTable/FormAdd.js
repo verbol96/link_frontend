@@ -127,6 +127,43 @@ export const FormAdd = ({isFormAdd, setIsFormAdd, user, adressOrder, loading, pa
 
     const [showDelete, setShowDelete] = useState(false)
 
+    const copyCode = (codeOutside) =>{
+        let text = ''
+        
+        if(typePost === 'E'){
+            text = 
+        `
+        Здравствуйте. Заказ отправили. 
+Сумма наложенного платежа: ${price}р (с учетом пересылки)
+Код для отслеживания: ${codeOutside}
+        `
+        }
+
+        if(typePost === 'R' && !firstClass){
+            text = 
+        `
+        Здравствуйте. Заказ отправили. 
+Сумма наложенного платежа: ${price}р
+Код для отслеживания: ${codeOutside}
+        `
+        }
+
+        if(typePost === 'R' && firstClass){
+            text = 
+        `
+        Здравствуйте. Письмо отправили. Вот данные для оплаты:
+ 
+4255 1901 5302 8421
+12/23
+ 
+сумма ${price}р за заказ +2р пересылка. Итого ${Number(price)+2}р
+${codeOutside} - код для отслеживания
+        `
+        }
+        
+
+        return text
+    }
 
     return(
         <>
@@ -258,13 +295,14 @@ export const FormAdd = ({isFormAdd, setIsFormAdd, user, adressOrder, loading, pa
                     <Col md={3}>
                         <Form.Label size='sm'>Почтовый код:</Form.Label>
                         <FormControl size='sm'   value={codeOutside} onChange={(e)=>setCodeOutside(e.target.value)} />
-                        <CopyToClipboard text={codeOutside || " "}>
+                        <CopyToClipboard text={copyCode(codeOutside) || " "}>
                             <Button className='mt-2' style={{width:"100%"}} size='sm' variant='light'>copy</Button>
                         </CopyToClipboard>
                     </Col>
                 </Row>
             </Card>
 
+            {editRow.id>0 ? 
             <Row className='mt-4'>
                 <Col>
                     <Button variant ={thema()} onClick={()=>nextShow(+1)}><i className="bi bi-arrow-up"></i></Button>{" "}
@@ -284,7 +322,14 @@ export const FormAdd = ({isFormAdd, setIsFormAdd, user, adressOrder, loading, pa
                     <Button variant ={thema()} onClick={()=>SendToDB()}>Сохранить</Button>{" "}
                     <Button variant="light" onClick={()=>setShowDelete(true)}>Удалить</Button>
                 </Col>
-            </Row>
+            </Row> 
+            :
+            <Row className='mt-4'>
+                <Col style={{textAlign: 'right'}}>
+                    <Button variant ={thema()} onClick={()=>SendToDB()}>Сохранить</Button>{" "}
+                </Col>
+            </Row> }
+            
             
         </Modal.Body>
         </Modal>     

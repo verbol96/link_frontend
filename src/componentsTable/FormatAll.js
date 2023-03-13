@@ -1,11 +1,24 @@
 import {Row, Card,  Button, Col, FormControl, FormLabel} from 'react-bootstrap'
-//import {useState} from 'react'
+import {useEffect, useState} from 'react'
 import { FormatOne } from './FormatOne'
+import { getSettings } from "../http/dbApi"
 
 export const FormatAll = ({photo, setPhoto, thema, price, setPrice}) =>{
 
+    const [settings, setSettings] = useState([])
+
+    useEffect(()=>{
+        async function getPriceList (){
+            let value = await getSettings()
+            setSettings(value)
+        }
+        getPriceList()
+
+    }, [])
+
+
     const PriceList = (format) =>{
-        switch(format){
+       /* switch(format){
             case '<а7': return 0.4
             case '<а6': return 0.65
             case '<а5': return 1.2
@@ -24,7 +37,16 @@ export const FormatAll = ({photo, setPhoto, thema, price, setPrice}) =>{
             case '50x70': return 54
             case 'магнит': return 3
             default: return 0
-        }
+        }*/
+        let price = 0
+
+        settings.forEach(el=>{
+            if(el.title === format) {
+                price = el.value
+            }
+        })
+
+        return price
     }
 
     const Sum = () =>{
