@@ -23,9 +23,9 @@ export const FormAdd = ({isFormAdd, setIsFormAdd, user, adressOrder, loading, pa
     const [userId] = useState( editRow.id>0 ? user.id : '')
     const [adressId] = useState( editRow.id>0 ? adressOrder.id : '')
 
-    const [name, setName] = useState( editRow.id>0 ? user.name : '')
-    const [nikname, setNikname] = useState( editRow.id>0 ? user.nikname : '')
-    const [phone, setPhone] = useState(editRow.id>0 ? user.phone : '')
+    const [name, setName] = useState( editRow.id>0 ? user.name : ' ')
+    const [nikname, setNikname] = useState( editRow.id>0 ? user.nikname : ' ')
+    const [phone, setPhone] = useState(editRow.id>0 ? user.phone : ' ')
 
     const [typePost, setTypePost] = useState(editRow.id>0 ? adressOrder.typePost : 'E')
     const [city, setCity] = useState(editRow.id>0 ? adressOrder.city : '')

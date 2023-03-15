@@ -27,6 +27,8 @@ const UsersDB = () =>{
     const isOrder = (id)=>{
         const a = orders.filter(el=>el.userId===id)
         if(a.length>0)return false
+        const b = user.filter(el=>el.id===id)
+        if(b[0].password!==null)return false
         else return true
     }
     const [input, setInput] = useState('')

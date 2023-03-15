@@ -10,8 +10,6 @@ import {$host} from '../http/index'
 
 export const TableFull = () =>{
 
-
-
     const dispach = useDispatch()
     const [isFormAdd, setIsFormAdd] = useState(false)
     const [selectPost, setSelectPost] = useState("All")
@@ -26,6 +24,7 @@ export const TableFull = () =>{
     }
 
     useEffect(()=>{
+
         $host.get('api/order/getAll').then(
             res=> {
                 dispach({type: "saveOrder", payload: _.orderBy(_.orderBy(res.data.order, 'id', 'desc' ), 'status', 'asc' )})
@@ -120,34 +119,34 @@ export const TableFull = () =>{
     return(
         <>
         <TableMenu setIsFormAdd={setIsFormAdd} selectPost= {selectPost} setSelectPost={setSelectPost} editRow={editRow}
-            inputSearch={inputSearch} setInputSearch={setInputSearch} filterCheck={filterCheck} setFilterCheck={setFilterCheck} />
-
+        inputSearch={inputSearch} setInputSearch={setInputSearch} filterCheck={filterCheck} setFilterCheck={setFilterCheck} />
         <Row className='justify-content-center' style={{backgroundColor: "rgb(232, 232, 232)", minHeight: 1000, width: '103%', overflow: 'hidden'}}>
-            <Col md={10} xs={12} style={{paddingRight: 0}} >
-            <Table responsive size='sm' className='mt-4' bordered hover  style={{backgroundColor:"white", width: '100%'}} >
-                
-                <tfoot style={{backgroundColor:"Silver"}}>
-                <tr>
-                    <td></td>
-                    <td></td>
-                    <td style={{fontSize: 11}}>K={OrderList().length}</td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td style={{fontSize: 11}}>N={SumFormat()}шт</td>
-                    <td></td>
-                    <td style={{ textAlign:'right', fontFamily: "Geneva", fontSize:10}}>S={SumPrice().toFixed(2)}</td>
-                    <td></td>
-                </tr>
-                </tfoot>
-                <tbody>
-                    {OrderList().map((el,index)=><TableRow key={index} el={el} user={user.filter(step=>step.id === el.userId)[0]} 
-                    adressOrder={adress.filter(step=>step.id === el.adressId)[0]} isFormAdd={isFormAdd}
-                        setIsFormAdd={setIsFormAdd} photo={photo.filter(step=>step.orderId === el.id)} loading={loading} />)}
-                </tbody>
-             </Table>
-            </Col>
+        <Col md={10} xs={12} style={{paddingRight: 0}} >
+        <Table responsive size='sm' className='mt-4' bordered hover  style={{backgroundColor:"white", width: '100%'}} >
+            
+            <tfoot style={{backgroundColor:"Silver"}}>
+            <tr>
+                <td></td>
+                <td></td>
+                <td style={{fontSize: 11}}>K={OrderList().length}</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td style={{fontSize: 11}}>N={SumFormat()}шт</td>
+                <td></td>
+                <td style={{ textAlign:'right', fontFamily: "Geneva", fontSize:10}}>S={SumPrice().toFixed(2)}</td>
+                <td></td>
+            </tr>
+            </tfoot>
+            <tbody>
+                {OrderList().map((el,index)=><TableRow key={index} el={el} user={user.filter(step=>step.id === el.userId)[0]} 
+                adressOrder={adress.filter(step=>step.id === el.adressId)[0]} isFormAdd={isFormAdd}
+                    setIsFormAdd={setIsFormAdd} photo={photo.filter(step=>step.orderId === el.id)} loading={loading} />)}
+            </tbody>
+         </Table>
+        </Col>
         </Row>
+
         {isFormAdd?<FormAdd isFormAdd={isFormAdd} setIsFormAdd={setIsFormAdd} user={user.filter(el=>el.id === editRow.userId)[0]}
         adressOrder={adress.filter(el=>el.id === editRow.adressId)[0]} loading={loading} editRow={editRow} photoAll={photo}
         nextShow={nextShow} indexR={indexR} />:null}

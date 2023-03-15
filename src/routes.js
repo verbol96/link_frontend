@@ -4,8 +4,9 @@ import Statistic from "./pages/Statistic"
 import Table from "./pages/Table"
 import UsersDB from "./pages/UsersDB"
 import Web from "./pages/Web"
+import PrivatePage from "./pages/PrivatePage"
 
-export const routes = [
+export const privateRoutes = [
     {
         path: '/table',
         Component: Table
@@ -29,5 +30,16 @@ export const routes = [
     {
         path: '/setting',
         Component: Setting
+    },
+    {
+        path: '/PrivatePage',
+        Component: PrivatePage
+    }
+]
+
+export const routes = [
+    {
+        path: '/table',
+        Component: Table
     }
 ]

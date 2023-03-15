@@ -2,12 +2,27 @@ import React from 'react';
 import {Offcanvas, Row, Button} from 'react-bootstrap'
 import {useNavigate} from 'react-router-dom'
 import {useSelector, useDispatch} from 'react-redux'
+import { useEffect, useState } from 'react';
+import { whoAmI } from '../http/authApi';
 
 export const LeftMenu = ()=>{
   
   const navigate = useNavigate()
   const dispach = useDispatch()
   const leftMenu = useSelector(state=>state.order.leftMenu)
+
+  const [user, setUser] = useState('')
+
+
+    useEffect(()=>{
+      async function getUser (){
+          let value = await whoAmI()
+          setUser(value)
+      }
+      getUser()
+
+  },[])
+
 
   const Close = (link) =>{
     dispach({type:'closeLeftMenu'})
@@ -28,24 +43,32 @@ export const LeftMenu = ()=>{
             </Row>
             <Row className='mt-3'>
             <Button variant="dark" onClick={()=>Close('/usersDB')}>
-                управление пользователями
+                Клиенты
+            </Button>
+            </Row>
+            <Row className='mt-3'>
+            <Button variant="dark" onClick={()=>Close('/PrivatePage')}>
+                Личный кабинет
             </Button>
             </Row>
             <Row className='mt-3'>
             <Button variant="dark" onClick={()=>Close('/statistic')}>
-                статистика
+                Статистика
             </Button>
             </Row>
             <Row className='mt-3'>
             <Button variant="dark" onClick={()=>Close('/web')}>
-                сайт
+                Сайт
             </Button>
             </Row>
             <Row className='mt-3'>
             <Button variant="dark" onClick={()=>Close('/setting')}>
-                настройки
+                Настройки
             </Button>
             </Row>
+            <h6 style={{marginTop: '300px'}}>{user.name}</h6>
+            <h6>{user.phone}</h6>
+           
         
         </Offcanvas.Body>
       </Offcanvas>

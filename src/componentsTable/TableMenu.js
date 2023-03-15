@@ -3,6 +3,7 @@ import {Button, Col,Row, FormSelect, FormControl, Toast, FormCheck, FormLabel} f
 import {useState} from 'react'
 import {useNavigate} from 'react-router-dom'
 import { LeftMenu } from '../componentsAdmin.js/LeftMenu'
+import { logout } from '../http/authApi'
 import {useDispatch} from 'react-redux'
 
 export const TableMenu = ({setIsFormAdd, setSelectPost, selectPost, inputSearch, setInputSearch, filterCheck, setFilterCheck, editRow}) =>{
@@ -28,14 +29,18 @@ export const TableMenu = ({setIsFormAdd, setSelectPost, selectPost, inputSearch,
         }
     }
     
+    const Logout = async() =>{
+        dispach({type: 'authStatus', paylods: false})
+        await logout()
+    }
 
     return(
         <div className="TableMenu">
             <LeftMenu />
             <Row style={{width: '103%'}}>
                 <Col md={1} xs={2}>
-                    <Button variant='dark' className='mt-2' style={{ marginLeft: '5%', color: 'black', backgroundColor: 'DarkSlateGrey'}} size='sm' onClick={()=>dispach({type:'showLeftMenu'})}>
-                        <i style={{textAlign:'center'}} className="bi bi-list"></i>
+                    <Button variant='dark' className='mt-2' style={{marginLeft: '5%', color: 'black', backgroundColor: 'DarkSlateGrey'}} size='sm' onClick={()=>dispach({type:'showLeftMenu'})}>
+                        <i className="bi bi-list"></i>
                     </Button>
                 </Col>
                 <Col md={{span: 1, offset: 0}}  xs={{span: 2, offset: 0}}>
@@ -77,6 +82,9 @@ export const TableMenu = ({setIsFormAdd, setSelectPost, selectPost, inputSearch,
                             <Col><FormLabel>оплаченные</FormLabel></Col>
                         </Row>
                     </Toast>
+                </Col>
+                <Col>
+                    <Button variant='dark' size='sm' className='mt-2' onClick={()=>Logout()}>выйти</Button>
                 </Col>
             </Row>
         </div>

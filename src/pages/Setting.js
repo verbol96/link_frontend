@@ -36,7 +36,8 @@ const Setting = () =>{
     return (
         <div>
             <NavBar />
-            <h3 style={{margin: '10px'}}>Настройки:</h3>
+            <h3 style={{display:'flex', justifyContent:'center', margin: 30}}>Настройки</h3>
+            
             {settings.map((el,index)=><Row key={index} className='mt-1 justify-content-center'>
                 <Col md={1}>
                     <Button size="sm" variant="secondary" style={{width: '100%'}}> {el.title} </Button>
